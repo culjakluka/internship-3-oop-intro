@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OOP
 {
@@ -6,9 +7,12 @@ namespace OOP
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var dict = new Dictionary<Event, List<Person>>();
         }
         static string Input(string message)
-
+        {
+            Console.WriteLine(message);
+            return Console.ReadLine();
+        }
     }
 }

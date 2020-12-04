@@ -4,7 +4,19 @@ using System.Text;
 
 namespace OOP
 {
-    class Event
+    public class Event
     {
+
+        public Event(string name, string eventType, DateTime startTime, DateTime endTime)
+        {
+            Name = name;
+            EventType = eventType;
+            StartTime = startTime;
+            EndTime = endTime;
+        }
+        public string Name { get; set; }
+        public string EventType { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }
