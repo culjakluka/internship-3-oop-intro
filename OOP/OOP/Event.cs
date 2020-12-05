@@ -7,7 +7,7 @@ namespace OOP
     public class Event
     {
 
-        public Event(string name, string eventType, DateTime startTime, DateTime endTime)
+        public Event(string name, _EventType eventType, DateTime startTime, DateTime endTime)
         {
             Name = name;
             EventType = eventType;
@@ -15,7 +15,7 @@ namespace OOP
             EndTime = endTime;
         }
         public string Name { get; set; }
-        public string EventType { get; set; }
+        public _EventType EventType { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }
