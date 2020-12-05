@@ -16,8 +16,7 @@ namespace OOP
         {
             var dict = new Dictionary<Event, List<Person>>();
             var action = 1;
-
-            while (action != 0)
+            do
             {
                 Console.WriteLine("Unesite broj akcije koju zelite izvrsiti: ");
                 Console.WriteLine("1. Dodavanje eventa");
@@ -27,7 +26,7 @@ namespace OOP
                 Console.WriteLine("5. Uklanjanje osobe sa eventa");
                 Console.WriteLine("6. Ispis detalja eventa");
                 Console.WriteLine("0. Izlaz iz aplikacije");
-                
+
                 action = int.Parse(Console.ReadLine());
                 switch (action)
                 {
@@ -40,10 +39,42 @@ namespace OOP
                     case 3:
                         EditEvent(dict);
                         break;
+                    case 4:
+                        AddPersonToEvent(dict, WhichEvent(dict, "U koji event zelite dodati osobu?"));
+                        break;
+                    case 5:
+                        DeletePersonFromEvent(dict, WhichEvent(dict, "Iz kojeg eventa zelite izbrisati osobu?"));
+                        break;
+                    case 6:
+                        var subAction = 1;
+                        do
+                        {
+                            Console.WriteLine("Unesite broj akcije podmenija koju zelite izvrsiti: ");
+                            Console.WriteLine("1. Ispis detalja eventa");
+                            Console.WriteLine("2. Ispis osoba na eventu");
+                            Console.WriteLine("3. Ispis detalja eventa i osoba na eventu");
+                            Console.WriteLine("4. Izlaz iz podmenija");
+                            subAction = int.Parse(Console.ReadLine());
+                            switch (subAction)
+                            {
+                                case 1:
+                                    PrintEventDetails(dict, WhichEvent(dict, "Detalje kojeg eventa zelite isprintane?"));
+                                    break;
+                                case 2:
+                                    PrintPersonsFromEvent(dict, WhichEvent(dict, "Osobe iz kojeg eventa zelite isprintane?"));
+                                    break;
+                                case 3:
+                                    PrintEventDetailsAndPersonsFromEvent(dict, WhichEvent(dict, "Detalje i osobe iz kojeg eventa zelite isprintane?"));
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } while (subAction!=4);
+                        break;
                     default:
                         break;
                 }
-            }
+            }while (action != 0);
         }
         static string Input(string message)
         {
@@ -131,6 +162,12 @@ namespace OOP
                 }
             }
             DateTime end = DateTime.Parse(endTime);
+
+            if(start > end)
+            {
+                Console.WriteLine("Event ne moze zavrsiti prije nego sto je poceo!");
+                goto StartTime;
+            }    
 
             var newEvent = new Event(eventName, (_EventType)1, start, end);
             var listOfPeople = new List<Person>();
@@ -274,6 +311,23 @@ namespace OOP
                     break;
             }
         }
+        static Event WhichEvent(Dictionary<Event, List<Person>> dict, string message)
+        {
+        EventName:
+            var eventName = Input(message);
+            if (eventName == "")
+            {
+                Console.WriteLine("Morate unijeti ime trazenog eventa!");
+                goto EventName;
+            }
+            foreach (var _event in dict)
+            {
+                if (_event.Key.Name == eventName)
+                    return _event.Key;
+            }
+            Console.WriteLine("Event nije naden!");
+            goto EventName;
+        }
         static void AddPersonToEvent(Dictionary<Event, List<Person>> dict, Event eventToAdd)
         {
         FirstName:
@@ -298,7 +352,81 @@ namespace OOP
                 Console.WriteLine("Morate unijeti OIB osobe!");
                 goto OIB;
             }
-            foreach(var )
+            foreach (var person in dict[eventToAdd])
+            {
+                if (person.OIB == oIB)
+                {
+                    Console.WriteLine("Ne mozete unijeti dvije osobe s istim OIB-om");
+                    Console.WriteLine("Osoba s kojom se uneseni OIB poklapa: ");
+                    person.Print();
+                    goto OIB;
+                }
+            }
+        PhoneNumber:
+            long phoneNumber = 0;
+            phoneNumber = long.Parse(Input("Unesite broj mobitela osobe: "));
+            if (phoneNumber == 0)
+            {
+                Console.WriteLine("Morate unijeti broj mobitela osobe!");
+                goto PhoneNumber;
+            }
+
+            if (Sure("Jeste li sigurni da zelite dodati osobu s unesenim podacima u uneseni event?"))
+            {
+                var personToAdd = new Person(firstName, lastName, oIB, phoneNumber);
+                dict[eventToAdd].Add(personToAdd);
+            }
+            else 
+            {
+                Console.WriteLine("Dodavanje osobe prekinuto!");
+            }
+        }
+        static void DeletePersonFromEvent(Dictionary<Event, List<Person>> dict, Event eventToRemovePerson)
+        {
+        OIB:
+            long oibToDelete = 0;
+            oibToDelete = long.Parse(Input("Unesite OIB osobe koju zelite izbrisati iz eventa: "));
+            if (oibToDelete == 0)
+            {
+                Console.WriteLine("Morate unijeti OIB: ");
+                goto OIB;
+            }
+            if (Sure("Zelite li izbrisati osobu s unesenim OIB-om?"))
+            {
+                foreach (var person in dict[eventToRemovePerson])
+                {
+                    if (person.OIB == oibToDelete)
+                    { 
+                        dict[eventToRemovePerson].Remove(person);
+                        Console.WriteLine("Osoba usjesno izbrisana.");
+                        return;
+                    }
+                }
+                Console.WriteLine("Osoba nije pronadena");
+            }
+            else 
+            {
+                Console.WriteLine("Brisanje osobe iz eventa prekinuto!");
+            }
+        }
+        static void PrintEventDetails(Dictionary<Event, List<Person>> dict, Event eventToPrint)
+        {
+            eventToPrint.PrintEvent();
+            Console.WriteLine("Broj ljudi na eventu: " + dict[eventToPrint].Count);
+        }
+        static void PrintPersonsFromEvent(Dictionary<Event, List<Person>> dict, Event fromEvent)
+        { 
+            var index = 0;
+            foreach (var person in dict[fromEvent])
+            {
+                index++;
+                person.Print2(index);
+            }
+        }
+        static void PrintEventDetailsAndPersonsFromEvent(Dictionary<Event, List<Person>> dict, Event fromEvent)
+        {
+            PrintEventDetails(dict, fromEvent);
+            PrintPersonsFromEvent(dict, fromEvent);
         }
     }
 }

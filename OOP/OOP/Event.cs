@@ -20,12 +20,10 @@ namespace OOP
         public DateTime EndTime { get; set; }
         public void PrintEvent() 
         {
-            Console.WriteLine("===================================");
             Console.WriteLine("Event name: " + Name);
             Console.WriteLine("Event type: " + (_EventType)EventType);
             Console.WriteLine("Event start time: " + StartTime.ToUniversalTime());
             Console.WriteLine("Event end time: " + EndTime.ToUniversalTime());
-            Console.WriteLine("===================================");
         }
     }
 }
