@@ -102,6 +102,16 @@ namespace OOP
                 Console.WriteLine("Morate unijeti pocetno vrijeme!");
                 goto StartTime;
             }
+            foreach (var _event in dict)
+            {
+                if (_event.Key.StartTime < DateTime.Parse(startTime) &&  DateTime.Parse(startTime) <_event.Key.EndTime)
+                {
+                    Console.WriteLine("Event ne moze poceti za vrijeme trajanja drugog eventa!");
+                    Console.WriteLine("Vrijeme koje ste unijeli se preklapa s eventom: ");
+                    _event.Key.PrintEvent();
+                    goto StartTime;
+                }
+            }
             DateTime start = DateTime.Parse(startTime);
         EndTime:
             var endTime = Input("Unesite vrijeme zavrsetka eventa ('dd/mm/yyyy hh:mm'):");
@@ -109,6 +119,16 @@ namespace OOP
             {
                 Console.WriteLine("Morate unijeti zavrsno vrijeme!");
                 goto EndTime;
+            }
+            foreach (var _event in dict)
+            {
+                if (_event.Key.StartTime < DateTime.Parse(endTime) && DateTime.Parse(endTime) < _event.Key.EndTime)
+                {
+                    Console.WriteLine("Event ne moze trajati za vrijeme trajanja drugog eventa!");
+                    Console.WriteLine("Vrijeme koje ste unijeli se preklapa s eventom: ");
+                    _event.Key.PrintEvent();
+                    goto EndTime;
+                }
             }
             DateTime end = DateTime.Parse(endTime);
 
@@ -254,9 +274,31 @@ namespace OOP
                     break;
             }
         }
-        static void AddPersonToEvent(Dictionary<Event, List<Person>> dict)
-        { 
-            
+        static void AddPersonToEvent(Dictionary<Event, List<Person>> dict, Event eventToAdd)
+        {
+        FirstName:
+            var firstName = Input("Unesite ime osobe koju zelite dodati u event(bez prezimena): ");
+            if (firstName == "")
+            {
+                Console.WriteLine("Morate unijeti ime osobe!");
+                goto FirstName;
+            }
+        LastName:
+            var lastName = Input("Unesite prezime osobe: ");
+            if (lastName == "")
+            {
+                Console.WriteLine("Morate unijeti prezime osobe!");
+                goto LastName;
+            }
+        OIB:
+            long oIB = 0;
+            oIB = long.Parse(Input("Unesite OIB osobe:"));
+            if (oIB == 0)
+            {
+                Console.WriteLine("Morate unijeti OIB osobe!");
+                goto OIB;
+            }
+            foreach(var )
         }
     }
 }
